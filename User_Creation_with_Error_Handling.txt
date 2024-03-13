@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#checking you are login with root or  not
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root"
+    exit 1
+fi
+
+#write a username
+read -p "Enter username: " username
+
+# Check if username already exists
+if id "$username" &>/dev/null; then
+    echo "User $username already exists."
+    exit 1
+fi
+
+# write for password
+read -sp "Enter password: " password
+echo
+
+# Create user with password
+useradd -m "$username" # -m to create home directory
+echo "$username:$password" | chpasswd
+
+echo "User $username created successfully."
